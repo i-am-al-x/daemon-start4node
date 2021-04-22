@@ -1,0 +1,80 @@
+#!/bin/sh                        <= Inform text editor: highlight as shell code
+# File: 
+#       ..../start-stop/sysconfig/node4_xxx-dev   (name in repository)
+#     ${START_STOP_DIR}/sysconfig/node4_xxx-dev   (name in "go.sh")
+#
+# Based upon "daemon-start4node/sysconfig/node4_xxx-dev"
+# That file is copyright 2020 Alexander R Danel
+# MIT License
+
+# Note: This script is intended to be "sourced," (not executed directly).
+
+# vvvvvvvvvvvvvvvvvvvvvvv  Set environment variables  vvvvvvvvvvvvvvvvvvvvvvvvvv
+
+declare MY_APP_NM="getcert"
+declare DNS_SHORT_NM="localhost"
+declare DB_CHOICE="dev";		# dev|test|prod
+declare DEV_REPOSITORY="$HOME/repos";
+
+# for setting other vars within this file ______________________________________
+: ${daemonName:?"must be defined before sourcing sysconfig"}
+
+# for both daemon-launcher and 'node' app ______________________________________
+export nodeListenPort="443";
+
+# for daemon-launcher __________________________________________________________
+
+# The javaScript file that "node" should run.
+export  nodeServerMainJs=index.js
+
+# The directory hierarchy
+declare         VAR="$HOME/var"
+declare         OPT="(not applicable)"
+export      LOG_DIR="$VAR/log/${daemonName}";
+export      PID_DIR="$VAR/run";
+
+# In DEV environment, the variables "WEB_ROOT_DIR", "APP_ROOT_DIR", and 
+# "SERVER_DIR" might already have a value, since a "go" script might
+# beneficially assign and export something in these vars.  
+# Do not overwrite prior value.
+# Mark variable for export, but assign a value only if var is empty.
+export  WEB_ROOT_DIR; 
+export  APP_ROOT_DIR; 
+export  SERVER_DIR; 
+:  ${WEB_ROOT_DIR:=$DEV_REPOSITORY};
+:  ${APP_ROOT_DIR:=$WEB_ROOT_DIR/$MY_APP_NM};
+:    ${SERVER_DIR:=$APP_ROOT_DIR/server};
+
+# for 'node' app _______________________________________________________________
+export isSSL="yes";
+
+# SSL certificate information, for 'node' app
+# Only non-secure, self-signed keys for "dev" and "test" envs are in repository!
+export sslCertificateDir="${DEV_REPOSITORY}/certs/${DNS_SHORT_NM}";
+export sslCertPrivateDir="${DEV_REPOSITORY}/certs/${DNS_SHORT_NM}";
+
+# The 'key' and 'cert' are required for 'https'
+export ssl_cert="${sslCertificateDir}/localhost.crt";
+export  ssl_key="${sslCertPrivateDir}/localhost.key";
+
+# The 'ca' (certificate authority) information is optional
+export ssl_ca_1=""
+export ssl_ca_2=""
+
+# additional_vars ______________________________________________________________
+
+# for 'node' app ...
+export               whichEnv="dev";		# dev|test|prod
+export        isServerDevMode="yes";
+export pathToConnectionConfig="${APP_ROOT_DIR}/configs/configDB-${DB_CHOICE}.json";
+
+# Summary of "additional_vars"; this gets passed to 
+# the "showConfig" function in the launch script "init.d/node4___"
+export additional_vars="
+  whichEnv
+  isServerDevMode
+  pathToConnectionConfig
+";
+
+# ^^^^^^^^^^^^^^^^^  Finished setting environment variables  ^^^^^^^^^^^^^^^^^^^
+

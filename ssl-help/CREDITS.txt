@@ -1,0 +1,11 @@
+CREDITS
+
+This directory, "ssl-help", contains some executables that are not
+by the author and are delivered here without comment. 
+These executables were found on AWS Linux, without apparent copyright,
+in the directory "/etc/pki/tls/certs".  The files are:
+
+	Makefile
+	make-dummy-cert
+	renew-dummy-cert
+

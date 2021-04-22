@@ -1,0 +1,96 @@
+Read about how to create a self signed certificate
+
+In addition to the technique described here, check out the executables
+supplied in this directory.  They are called:
+
+    make-dummy-cert
+    Makefile
+
+Doc by:  Let's Encrypt
+
+The "letsencrypt.org" group offers itself as a free, automated, and open
+certificate authority.  The also provide information about how to create
+a self-signed certificate, and why you need one.
+
+  https://letsencrypt.org/docs/certificates-for-localhost/
+
+To create a certificate, run the following command on Linux:
+
+DURATION_DAYS=3650; # ten years
+MY_HOST_NAME="localhost";
+openssl req -x509 -out "$MY_HOST_NAME".crt -keyout "$MY_HOST_NAME".key \
+  -newkey rsa:2048 -nodes -sha256 -days ${DURATION_DAYS} \
+  -subj "/CN=$MY_HOST_NAME" -extensions EXT -config <( \
+   printf "[dn]\nCN=$MY_HOST_NAME\n[req]\ndistinguished_name = dn\n[EXT]\nsubjectAltName=DNS:$MY_HOST_NAME\nkeyUsage=digitalSignature\nextendedKeyUsage=serverAuth")
+
+Executed that command this.  It created files:
+
+  localhost.crt
+  localhost.key
+
+The Let's Encrypt page explains:
+
+	You can then configure your local web server with 
+	localhost.crt and localhost.key, and install localhost.crt 
+	in your list of locally trusted roots.
+
+The method by which to "install ... in ... list of locally trusted roots"
+is explained at "bounca.org", at page:
+
+  https://www.bounca.org/tutorials/install_root_certificate.html
+
+For Macintosh OS X, they say:
+
+  Use the following command to add a certificate:
+
+	sudo security add-trusted-cert -d -r trustRoot \
+	-k /Library/Keychains/System.keychain <new-root-certificate>
+
+  Use the following command to remove a certificate
+
+	sudo security delete-certificate -c "<name of existing certificate>"
+
+Mac command line -- Can do this:
+
+MY_HOST_NAME="localhost";
+sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain /Users/adanel/Goog_Drv/repos/ct-spa-desk/ssl/${MY_HOST_NAME}.crt
+
+MY_HOST_NAME="ct.planner9.com";
+
+Mac GUI
+
+With the Mac GUI, just clicking on the file brings up "Keychain Access" 
+system program.  The Certificate puts itself into the "System" grouping 
+of "keychains".  
+
+Note that at bottom left of GUI panel there is "Category",
+make sure "Certificates" is selected.
+
+At the top left there is a list of "Keychains".  For the "System" keychain
+there there is a padlock.  Right-click on it, from pop-up menu select
+"Unlock keychain 'System'", and enter password to open the padlock.  
+
+At the list of certificates, double click on the row representing the 
+newly inserted certificate.  This opens a new window.  There is a hierarchy 
+type control labeled "Trust".  Click to reveal a bunch of pull-downs.  
+The top pull-down is "When using this certificate", select "Always Trust".
+Close the window; provide password when prompted. 
+
+Go back to the padlock.  Right click, select "Lock".
+
+Warning: Don't flip to an unrelated window while going through this 
+process because the padlock becomes confused.
+
+----------------------
+Problem: Browser Cache
+----------------------
+
+Chrome would not acknowledge a changed certificate.  This can be very bad
+when attempting to resolve certificate issues.  I lost several hours due
+to this.
+
+The following site says that browsers cache certificates, and gives
+advice on how to clear that cache.
+
+    https://www.a2hosting.com/kb/getting-started-guide/internet-and-networking/clearing-a-web-browsers-ssl-state
+

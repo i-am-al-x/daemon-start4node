@@ -1,0 +1,64 @@
+#!/bin/sh                        <= Inform text editor: highlight as shell code
+# File: 
+#   ..../start-stop/sysconfig/node4_xxx-zapp-com     (name in repository)
+#              /etc/sysconfig/node4_xxx              (installed name)
+#
+# Based upon "daemon-start4node/sysconfig/node4_xxx-zapp-com"
+# That file is copyright 2020 Alexander R Danel
+# MIT License
+
+# Note: This script is intended to be "sourced," (not executed directly).
+
+# vvvvvvvvvvvvvvvvvvvvvvv  Set environment variables  vvvvvvvvvvvvvvvvvvvvvvvvvv
+
+declare         MY_APP_NM="xxxxxxxx"
+declare      DNS_SHORT_NM="zapp-com"
+declare         DB_CHOICE="(not applicable)"
+declare    DEV_REPOSITORY="(not applicable)";
+
+# for setting other vars within this file ______________________________________
+: ${daemonName:?"must be defined before sourcing sysconfig"}
+
+# for both daemon-launcher and 'node' app ______________________________________
+export nodeListenPort="80";
+
+# for daemon-launcher __________________________________________________________
+
+# The javaScript file that "node" should run.
+export  nodeServerMainJs=index.js
+
+# The directory hierarchy
+declare         VAR="/var"
+declare         OPT="/opt"
+export      LOG_DIR="$VAR/log/${daemonName}";
+export      PID_DIR="$VAR/run";
+export WEB_ROOT_DIR="$OPT/web";
+export APP_ROOT_DIR="${WEB_ROOT_DIR}/${MY_APP_NM}";
+export   SERVER_DIR="${APP_ROOT_DIR}/server";
+
+# for 'node' app _______________________________________________________________
+export isSSL="no";
+
+# Not using SSL certificate.
+export sslCertificateDir;
+export sslCertPrivateDir;
+export ssl_key;
+export ssl_cert;
+export ssl_ca_1;
+export ssl_ca_2;
+
+# additional_vars ______________________________________________________________
+
+# for 'node' app...
+export        whichEnv="prod";		# dev|test|prod
+export isServerDevMode="no";
+
+# Summary of "additional_vars", this gets passed to 
+# the "showConfig" function in the launch script "init.d/node4___"
+export additional_vars="
+  whichEnv
+  isServerDevMode
+";
+
+# ^^^^^^^^^^^^^^^^^  Finished setting environment variables  ^^^^^^^^^^^^^^^^^^^
+

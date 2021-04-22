@@ -1,0 +1,68 @@
+# Script name: "go-launch"
+# Created by Alexander Danel, April 16, 2020
+# Copyright 2020 Alexander Danel
+
+# Purpose:
+#   This is a launch script that was used for testing a 
+#   particular server during development.
+#   The environment variables that get set here are known to,
+#   and are used by, the server program.
+#   In a normal TEST or PROD environment, the variables would
+#   be set in via the /etc/sysconfig/xxx script, which get's
+#   used by the /etc/init.d/xxx daemon launch script.
+#   In development, it is sometimes advantageous to just 
+#   set-up the configuration, as done here, and launch the 
+#   server directly. 
+#
+#   This is just a sample of what has been done, provided because
+#   it might serve as a model.  There are no universal truths here.
+
+# Set environment variables
+
+# for server
+export          isDevelopment="yes";
+export                  isSSL="no";
+export         nodeListenPORT="3000";
+export pathToConnectionConfig="/Users/adanel/desk/config/configConnectToMsSql.json";
+
+DANEL_HOME="$HOME";
+COMPUTER_NAME=$( scutil --get ComputerName )
+if [ $? eq 0 ] ; then 
+  if [ ${COMPUTER_NAME} = "Alexanders Mac mini" ] ; then 
+    # desktop
+    GOOGLE_DRIVE="$DANEL_HOME/Goog_Drv"
+  else
+    # laptop
+    GOOGLE_DRIVE="$DANEL_HOME/Google Drive"
+  fi;
+else
+  echo "Not an apple machine"
+fi;
+
+# SSL certificate information, for server
+#export sslCertificateDir='/opt/local/etc/keys/cur-map-org';
+#export sslCertificateDir='/Users/adanel/Goog_Drv/repos/ct-spa-desk/site-admin/ssl/cur-map-org';
+export sslCertificateDir='${GOOGLE_DRIVE}/repos/ct-spa-desk/site-admin/ssl/self-sign';
+
+# The 'key' and 'cert' are required
+#export  ssl_key="${sslCertificateDir}/pkcorg.key";
+#export ssl_cert="${sslCertificateDir}/CURRICULUMMAPPER.ORG.crt";
+export  ssl_key="${sslCertificateDir}/localhost.key";
+export ssl_cert="${sslCertificateDir}/localhost.crt";
+
+# The 'ca' (certificate authority) information is optional
+#export ssl_ca_1="${sslCertificateDir}/AddTrustExternalCARoot.crt";
+#export ssl_ca_2="${sslCertificateDir}/OV_USERTrustRSACertificationAuthority.crt";
+
+# for client
+export standardsImageDir="/std_images";
+export webHost="localhost";
+#export webHost="curriculumMapper.org";
+#export webPort="3000";
+
+export SERVER_DIR='${GOOGLE_DRIVE}/Web/site-desk/server-slink';
+
+# Launch the server
+
+node Server.js 2>&1 | tee log.txt 
+

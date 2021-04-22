@@ -1,0 +1,11 @@
+#!/bin/sh                                
+# Copyright 2020 Alexander R Danel
+# MIT License
+BASENAME=${0##*/};
+DAEMON_NAME=${BASENAME##node4};
+{ # restart "node4_xxx" which is ...
+  DATE_TIME_STAMP=$( date "+%Y-%m-%d-h%Hm%M" );
+  echo "----------------------------------";
+  echo "$DATE_TIME_STAMP cron restart";
+  /etc/init.d/node4${DAEMON_NAME} restart 
+} >> /var/log/node4${DAEMON_NAME}/cron-log.txt 2>&1
