@@ -156,12 +156,13 @@ daemonName=$(basename "$0")
 # Suggestion: Create directory "/opt/local/bin", and dont include it in PATH.
 
 case $( uname -n ) in 
-    # Note: The machine names illustrated here happen to have an IP number as part of
-    # the name, merely to imitate the fact that AWS likes to name its machines that way.
-    # Adjust script for your needs.  You might not need any "case" statement; if the 
-    # script serves just one machine "absolutePathToExec" can be set unconditionally.
+    # Adjust this part of the script for your needs.  You might not need any 
+    # "case" statement; if the script serves just one machine, then
+    # "absolutePathToExec" can be set unconditionally.
+    # Note: The example machine names illustrated here happen to have an 
+    # IP number as part of the name, merely to imitate the fact that AWS 
+    # likes to name its machines this way.  Your 'uname' will be different.
     ip-42-42-42-42)  #  PROD
-	#absolutePathToEXEC="/home/alexander/.nvm/versions/node/v13.8.0/bin/${daemonName}";
 	absolutePathToEXEC="/opt/local/bin/${daemonName}";
 	;;
     ip-7-11-42-42)  # TEST
