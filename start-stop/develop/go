@@ -33,7 +33,7 @@
 #   but also add a suffix of "-dev" to clarify this is a particular instance
 #   of the config which is applicable only to the "dev" environment.
 #
-# $ cp node4xxx-sample node4${MY_APP_NM}-dev
+# $ cp node4_xxxx_-sample node4${MY_APP_NM}-dev
 #
 #   Note that at some later date, you will probably create other versions of 
 #   the config, with suffixes that suggest what environment they are for.
@@ -78,7 +78,7 @@
 
 #set -x
 
-declare MY_APP_NM="xxxxx"
+declare MY_APP_NM="_xxxx_"
 declare daemonName="node4${MY_APP_NM}"
 
 #declare START_STOP_DIR="$HOME/Goog_Drv/repos/${MY_APP_NM}/start-stop";
@@ -86,7 +86,7 @@ declare START_STOP_DIR="$HOME/${MY_APP_NM}/start-stop";
 
 # Set and export environment variables
 export daemonSysconfigName="$START_STOP_DIR/sysconfig/${daemonName}-dev";
-export WEB_DIR="$HOME/desk";
+export WEB_DIR="$HOME/${MY_APP_NM}/web-server"; # or wherever you put the server code
 
 # Execute the script that launches the server daemon
 "$START_STOP_DIR/init.d/${daemonName}" "$@"

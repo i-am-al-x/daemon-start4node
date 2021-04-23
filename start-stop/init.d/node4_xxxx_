@@ -1,18 +1,49 @@
 #!/bin/sh
-# Shell script "..../init.d/node4xxxxxxxx"
-# Based upon "node4_xxx" in directory "daemon_start4node/start-stop/init.d/"
-# Copyright 2020 Alexander R Danel
+# Shell script "..../init.d/node4_xxxx_"
+# Template is "node4_xxxx_ in directory "daemon_start4node/start-stop/init.d/"
+# Template is Copyright 2021 Alexander R Danel
 
 # This script is intended for directory "/etc/init.d".
+
+# - You might want to copy the entire "start-stop" directory to be 
+#   under your source code control system.  You will be modifying
+#   the template files to create your own custom scripts.
+#
+# - The whole system is interconnected, and depends upon, the token 
+#   that is templated here as "node4_xxxx_".
+#
+# - You will replace the "_xxxx_" part of the token with the name of your
+#   server.  So, if your server is called "travel" then your version of
+#   this token would be "node4travel" (replacing "node4_xxxx_" everywhere).
+#
+# - Rename this file to match your token.
+#
+# - Modify the contents of this file by replacing "_xxxx_" with the name 
+#   of your server.
+#
+# - Also, you must create a symbolic link, somewhere, such that the link
+#   points at the "node" interpreter and the link name is your token.
+#   So, you will do something like:
+#     $ sudo ln -s /usr/bin/node  /opt/local/bin/node4_xxxx_
+#   For example, if your server were named "travel", the command  would be:
+#     $ sudo ln -s /usr/bin/node  /opt/local/bin/node4travel
+#   See also "absolutePathToEXEC", below.
+#
+# - For those configuration parameters that are particular for each 
+#   instalation, your server should get those values via Unix environment 
+#   variables.  The variables and their values are defined in a file named
+#   by the token and placed in /etc/sysconfig. For example, the config
+#   file for a server named "travel" is "/etc/sysconfig/node4travel".
+#
 
 #set -x
 
 thisScript=$(basename "$0")
 daemonName=$(basename "$0")
 
-# === node4xxxxxxxx ===
-# This script starts and stops the "xxxxxxxx" daemon.
-# The app "xxxxxxxx" is (__describe_the_product__).
+# === node4_xxxx_ ===
+# This script starts and stops the "_xxxx_" daemon.
+# The app "_xxxx_" is (__describe_the_product__).
 
 # This script benefited from a study of code and concepts in the "node-startup" 
 # package found on 'github', and from various scripts found in "/etc/init.d" 
@@ -37,8 +68,8 @@ daemonName=$(basename "$0")
 #	{run_level}  {start_priority}  {stop_priority}
 #...............................................................................
 # chkconfig: 2345 85 15
-# description: The 'node4xxxxxxxx' script starts app 'xxxxxxxx' running under \
-#		'node'.  The app 'xxxxxxxx' is ...(describe)
+# description: The 'node4_xxxx_' script starts app '_xxxx_' running under \
+#		'node'.  The app '_xxxx_' is ...(describe)
 #...............................................................................
 
 # New LSB-style init stanzas follow.
@@ -48,14 +79,14 @@ daemonName=$(basename "$0")
 # Note: rigid formatting from "BEGIN INIT" through "END INIT".
 #...............................................................................
 ### BEGIN INIT INFO
-# Provides: node4xxxxxxxx
+# Provides: node4_xxxx_
 # Required-Start:    $network $remote_fs $local_fs
 # Required-Stop:     $network $remote_fs $local_fs
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: App 'xxxxxxxx' under 'node' as daemon.
-# Description: The 'node4xxxxxxxx' script starts app 'xxxxxxxx' running under \
-#		'node'.  The app 'xxxxxxxx' is ...(describe).
+# Short-Description: App '_xxxx_' under 'node' as daemon.
+# Description: The 'node4_xxxx_' script starts app '_xxxx_' running under \
+#		'node'.  The app '_xxxx_' is ...(describe).
 ### END INIT INFO
 #...............................................................................
 
@@ -101,35 +132,45 @@ daemonName=$(basename "$0")
 # ------------------------------------------------------------------------------
 # The absolute path to the executable program
 # Note that a copy of, or link to, the executable was made, so that it
-# can have the unique name 'node4xxxxxxxx'.  This allows a sensible value 
+# can have the unique name 'node4_xxxx_'.  This allows a sensible value 
 # when setting 'daemonName' based upon 'basename'.  The unique name might be 
 # helpful when looking up stuff in the '/proc' file system
+# 
+# Repeating for emphasis: You create a link named 'node4_xxxx_'.
+# This is a link to "node" itself; it's the javascript interpreter, and
+# is not your javascript code.  Your server is run by the interpreter,
+# so it is the interpreter that shows up as a process in the Unix/Linux
+# 'ps' command and in the '/proc' file system.
 # 
 # Tip: Put the executable someplace that is **not**  mentioned in PATH setting
 # for user and root.  Otherwise, confusion is likely to occur because the 
 # binary (or link to it) has the same name as this script.  Both are named 
-# "nodexxxxxxxx" and both are executable.  During development, while the 
+# "node_xxxx_" and both are executable.  During development, while the 
 # script is in the current directory, the intention might be to execute the 
-# local script by using "./node4xxxxxxxx", which has the local path "./"
+# local script by using "./node4_xxxx_", which has the local path "./"
 # specified, but contrary to intention, the "./" might get omitted and 
-# "node4xxxxxxxx" gets typed at the command line.  The desired behavior is 
+# "node4_xxxx_" gets typed at the command line.  The desired behavior is 
 # that errant command should get a response of "not found".  The undesired 
 # behavior is that the binary of the same name gets found and executed. 
 # So, put the binary someplace that is not in $PATH.
 # Suggestion: Create directory "/opt/local/bin", and dont include it in PATH.
 
 case $( uname -n ) in 
-    ip-10-15-0-117)  # Xogito PROD
+    # Note: The machine names illustrated here happen to have an IP number as part of
+    # the name, merely to imitate the fact that AWS likes to name its machines that way.
+    # Adjust script for your needs.  You might not need any "case" statement; if the 
+    # script serves just one machine "absolutePathToExec" can be set unconditionally.
+    ip-42-42-42-42)  #  PROD
 	#absolutePathToEXEC="/home/alexander/.nvm/versions/node/v13.8.0/bin/${daemonName}";
 	absolutePathToEXEC="/opt/local/bin/${daemonName}";
 	;;
-    ip-10-16-0-131)  # Xogito TEST
-	absolutePathToEXEC="/home/alexander/.nvm/versions/node/v13.8.0/bin/${daemonName}";
+    ip-7-11-42-42)  # TEST
+	absolutePathToEXEC="/home/my_user_name/.nvm/versions/node/v13.8.0/bin/${daemonName}";
 	;;
     ip-192-168-*)  # dev machine
 	absolutePathToEXEC="/usr/local/bin/${daemonName}";
 	;;
-    Alexanders-Mac-mini.local)  # dev machine, alternate "uname -n" result
+    My-Mac-mini.local)  # dev machine, alternate "uname -n" result
 	absolutePathToEXEC="/usr/local/bin/${daemonName}";
 	;;
     *) # fall through
@@ -434,7 +475,7 @@ sayPortStatus() {
 # function confirmPortIsAvailable  _____________________________________________
 confirmPortIsAvailable() {
   local QUIET_MODE_FLAG="";
-  if [ xxx$1 = "xxx-q" ] ; then
+  if [ _$1 = "_-q" ] ; then
     QUIET_MODE_FLAG="yes";
     shift;
   fi;
@@ -679,7 +720,7 @@ sayUsage() {
   echo    "        $thisScript           (status|show_config|logs|lognames)"
   echo    "   sudo $thisScript [ --force ] (start|stop|restart)"
   echo    "        $thisScript [ -n {line_count} ]    dumplogs"
-  echo    "        $thisScript  --help
+  echo    "        $thisScript  --help"
   return;
 }
 

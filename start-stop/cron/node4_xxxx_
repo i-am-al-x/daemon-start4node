@@ -1,5 +1,5 @@
 #!/bin/sh                                
-# Copyright 2020 Alexander R Danel
+# Copyright 2021 Alexander R Danel
 # MIT License
 BASENAME=${0##*/};
 DAEMON_NAME=${BASENAME##node4};

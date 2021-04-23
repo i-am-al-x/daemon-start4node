@@ -1,22 +1,33 @@
 #!/bin/sh                        <= Inform text editor: highlight as shell code
-# File: 
-#   ..../start-stop/sysconfig/node4_xxx-utest-com     (name in repository)
-#              /etc/sysconfig/node4_xxx              (installed name)
-#
-# Based upon "daemon-start4node/sysconfig/node4_xxx-zapp-com"
-# That file is copyright 2020 Alexander R Danel
+# The template file is copyright 2021 Alexander R Danel
+# Please retain copyright notice in derived works (which may have their
+# own additional copyright).
 # MIT License
+#
+# Template for a config file that serves the development environment where the
+# server is run on the developers machine and accessed as localhost 127.0.0.1.
+#
+# Name of template file:
+#   ..../start-stop/sysconfig/node4_xxxx_-website-com
+#
+# In the TEST or PROD environments, config is used by "/etc/init.d" script,
+# so put the customized version where that script expects to look find it:
+#       /etc/sysconfig/node4_xxxx_
 
 # Note: This script is intended to be "sourced," (not executed directly).
 
 # vvvvvvvvvvvvvvvvvvvvvvv  Set environment variables  vvvvvvvvvvvvvvvvvvvvvvvvvv
 
-declare MY_APP_NM="selfsign"
-declare DNS_SHORT_NM="utest-com"
-declare DB_CHOICE="test";
+declare MY_APP_NM="_xxxx_"
+declare DNS_SHORT_NM="my_website-com"
+declare DB_CHOICE="prod";
 declare DEV_REPOSITORY="(not applicable)";
 
 # for setting other vars within this file ______________________________________
+
+# Note that when called by matching "/etc/init.d/node4_xxxx_" script, 
+# the value of "$daemonName" will be set by that script,
+# so that context should never result in an error here.
 : ${daemonName:?"must be defined before sourcing sysconfig"}
 
 # for both daemon-launcher and 'node' app ______________________________________
@@ -37,15 +48,19 @@ export APP_ROOT_DIR="${WEB_ROOT_DIR}/${MY_APP_NM}";
 export   SERVER_DIR="${APP_ROOT_DIR}/server";
 
 # for 'node' app _______________________________________________________________
-export isSSL="no";
+
+# Here are some suggested variables that the server program might want to 
+# incorporate.
+export isSSL="yes";
 
 # SSL certificate information, for 'node' app
 export sslCertificateDir="/etc/pki/tls/certs";
 export sslCertPrivateDir="/etc/pki/tls/private";
 
 # The 'key' and 'cert' are required for 'https'
-export ssl_cert="${sslCertificateDir}/ct.planner9.com.crt"
-export  ssl_key="${sslCertPrivateDir}/ct.planner9.com.key"
+MY_HOSTNAME="my_website.com";
+export ssl_cert="${sslCertificateDir}/${MY_HOSTNAME}.crt"
+export  ssl_key="${sslCertPrivateDir}/${MY_HOSTNAME}.key"
 
 # The 'ca' (certificate authority) information is optional
 export ssl_ca_1=""
@@ -53,18 +68,21 @@ export ssl_ca_2=""
 
 # additional_vars ______________________________________________________________
 
-# for 'node' app ...
-export        whichEnv="test";		# dev|test|prod
-export isServerDevMode="yes";
-export target_hostname="ct.planner9.com";
+# App specific config, not used by the start-stop script.
+# Set any additional env vars that will be used by the server app.
+# (In template file, these are just examples.  Replace with your own.)
+export        whichEnv="prod";		# dev|test|prod
+export isServerDevMode="no";
+export target_hostname="${MY_HOSTNAME}";
 
 # Summary of "additional_vars"; this gets passed to 
-# the "showConfig" function in the launch script "init.d/node4___"
+# the "showConfig" function in the launch script "init.d/node4_xxxx_"
 export additional_vars="
   whichEnv
   isServerDevMode
   target_hostname
 ";
+# pathToConnectionConfig <= not used?
 
 # ^^^^^^^^^^^^^^^^^  Finished setting environment variables  ^^^^^^^^^^^^^^^^^^^
 
