@@ -175,7 +175,7 @@ case $( uname -n ) in
 	absolutePathToEXEC="/usr/local/bin/${daemonName}";
 	;;
     *) # fall through
-        echo "Dont know path to executable on unknown host $( uname -n )"
+        echo "For host $( uname -n ), matching 'case' needed, but not found while attempting to set 'absolutePathToEXEC'."
         exit 1
 	;;
 esac

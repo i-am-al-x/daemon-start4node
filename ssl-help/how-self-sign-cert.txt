@@ -9,7 +9,7 @@ supplied in this directory.  They are called:
 Doc by:  Let's Encrypt
 
 The "letsencrypt.org" group offers itself as a free, automated, and open
-certificate authority.  The also provide information about how to create
+certificate authority.  They also provide information about how to create
 a self-signed certificate, and why you need one.
 
   https://letsencrypt.org/docs/certificates-for-localhost/
@@ -64,7 +64,8 @@ system program.  The Certificate puts itself into the "System" grouping
 of "keychains".  
 
 Note that at bottom left of GUI panel there is "Category",
-make sure "Certificates" is selected.
+make sure "Certificates" is selected.  This reduces the list of rows
+so the list has only those rows related to certificates.
 
 At the top left there is a list of "Keychains".  For the "System" keychain
 there there is a padlock.  Right-click on it, from pop-up menu select
